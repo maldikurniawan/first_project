@@ -1,10 +1,10 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-export default function akun() {
+export default function Camera() {
   return (
     <View>
-      <Text>akun</Text>
+      <Text>camera</Text>
     </View>
   )
 }
