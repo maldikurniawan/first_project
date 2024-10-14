@@ -20,7 +20,7 @@ export default function Login() {
     return (
         <View style={tw`flex-1 bg-white`}>
             <Image source={backImage} style={tw`absolute top-0 w-full h-80`} />
-            <View style={tw`absolute bottom-0 w-full h-3/4 bg-white rounded-t-3xl`} />
+            <View style={tw`absolute bottom-0 w-full h-[600px] bg-white rounded-t-3xl`} />
             <SafeAreaView style={tw`flex-1 justify-center mx-8`}>
                 <Text style={tw`text-4xl font-bold text-orange-500 text-center mb-8`}>Log In</Text>
                 <TextInput

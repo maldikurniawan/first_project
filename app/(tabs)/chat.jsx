@@ -1,3 +1,4 @@
+import { Feather } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, FlatList, StyleSheet } from 'react-native';
 import tw from 'twrnc';
@@ -29,7 +30,7 @@ export default function Chat() {
                 renderItem={renderMessage}
                 keyExtractor={(item) => item.id.toString()}
                 style={tw`flex-1 p-4`}
-                contentContainerStyle={tw`padding-bottom-20`}
+                contentContainerStyle={tw`pb-20 mt-10`}
             />
             <View style={tw`flex-row items-center p-2 gap-2`}>
                 <TextInput
@@ -38,7 +39,7 @@ export default function Chat() {
                     value={message}
                     onChangeText={setMessage}
                 />
-                <Button title="Send" onPress={sendMessage} />
+                <Feather name="send" size={24} color="blue" onPress={sendMessage} />
             </View>
         </View>
     )

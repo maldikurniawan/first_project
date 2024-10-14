@@ -2,7 +2,7 @@ import { Tabs } from 'expo-router';
 import React from 'react';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { FontAwesome, FontAwesome5, Ionicons } from '@expo/vector-icons';
+import { FontAwesome5, Ionicons, MaterialIcons } from '@expo/vector-icons';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -23,6 +23,15 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="message"
+        options={{
+          title: 'Message',
+          tabBarIcon: ({ color, focused }) => (
+            <MaterialIcons name={focused ? "message" : "messenger-outline"} size={24} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="akun"
         options={{
           title: 'Akun',
@@ -35,12 +44,6 @@ export default function TabLayout() {
       {/* Hide Tabs */}
       <Tabs.Screen
         name="chat"
-        options={{
-          href: null,
-        }}
-      />
-      <Tabs.Screen
-        name="camera"
         options={{
           href: null,
         }}

@@ -1,31 +1,32 @@
+import { useNavigation } from 'expo-router';
 import React from 'react';
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import tw from 'twrnc';
 
 export default function Index() {
-  const friends = [
-    { id: '1', name: 'Alice' },
-    { id: '2', name: 'Bob' },
-    { id: '3', name: 'Charlie' },
-    { id: '4', name: 'Diana' },
-    { id: '5', name: 'Ethan' },
-  ];
-
-  const renderFriend = ({ item }) => (
-    <TouchableOpacity style={tw`bg-white border border-gray-300 rounded-lg p-4 m-2`}>
-      <Text style={tw`text-lg`}>{item.name}</Text>
-    </TouchableOpacity>
-  );
-
+  const navigation = useNavigation();
   return (
-    <View style={tw`flex-1 bg-gray-100`}>
-      <Text style={tw`text-2xl font-bold p-4`}>Daftar Teman</Text>
-      <FlatList
-        data={friends}
-        renderItem={renderFriend}
-        keyExtractor={(item) => item.id}
-        style={tw`flex-1`}
-      />
+    <View style={tw`flex-1 bg-gray-100 justify-center items-center p-6`}>
+      {/* Header Section */}
+      <View style={tw`mb-8`}>
+        <Text style={tw`text-4xl font-bold text-blue-800 text-center`}>Welcome to Our App!</Text>
+        <Text style={tw`text-lg text-blue-600 mt-2 text-center`}>Experience the best service we offer</Text>
+      </View>
+
+      {/* Main Content */}
+      <View style={tw`mb-12`}>
+        <Text style={tw`text-xl text-gray-700 text-center`}>
+          Enjoy seamless functionality, real-time updates, and a fantastic user experience!
+        </Text>
+      </View>
+
+      {/* Call to Action Button */}
+      <TouchableOpacity 
+        style={tw`bg-blue-500 p-4 rounded-full shadow-lg`}
+        onPress={() => navigation.navigate('login')}
+      >
+        <Text style={tw`text-white text-lg font-semibold  mx-2`}>Get Started</Text>
+      </TouchableOpacity>
     </View>
   );
-};
+}
