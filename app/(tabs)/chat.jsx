@@ -18,7 +18,7 @@ export default function Chat() {
     };
 
     const renderMessage = ({ item }) => (
-        <View style={tw`bg-blue-200 rounded-lg p-2 m-2`}>
+        <View style={tw`bg-orange-200 rounded-lg p-2 m-2`}>
             <Text style={tw`text-lg`}>{item.text}</Text>
         </View>
     );
@@ -39,7 +39,7 @@ export default function Chat() {
                     value={message}
                     onChangeText={setMessage}
                 />
-                <Feather name="send" size={24} color="blue" onPress={sendMessage} />
+                <Feather name="send" size={24} color="orange" onPress={sendMessage} />
             </View>
         </View>
     )

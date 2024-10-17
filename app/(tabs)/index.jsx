@@ -9,8 +9,8 @@ export default function Index() {
     <View style={tw`flex-1 bg-gray-100 justify-center items-center p-6`}>
       {/* Header Section */}
       <View style={tw`mb-8`}>
-        <Text style={tw`text-4xl font-bold text-blue-800 text-center`}>Welcome to Our App!</Text>
-        <Text style={tw`text-lg text-blue-600 mt-2 text-center`}>Experience the best service we offer</Text>
+        <Text style={tw`text-4xl font-bold text-orange-800 text-center`}>Welcome to Our App!</Text>
+        <Text style={tw`text-lg text-orange-600 mt-2 text-center`}>Experience the best service we offer</Text>
       </View>
 
       {/* Main Content */}
@@ -22,7 +22,7 @@ export default function Index() {
 
       {/* Call to Action Button */}
       <TouchableOpacity 
-        style={tw`bg-blue-500 p-4 rounded-full shadow-lg`}
+        style={tw`bg-orange-500 p-4 rounded-full shadow-lg`}
         onPress={() => navigation.navigate('login')}
       >
         <Text style={tw`text-white text-lg font-semibold  mx-2`}>Get Started</Text>

@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { Text, View, TextInput, Image, SafeAreaView, TouchableOpacity, StatusBar, Alert } from "react-native";
-import tw from "twrnc"; // Import twrnc
+import tw from "twrnc";
+import { useNavigation } from "expo-router";
 
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const backImage = require("../assets/images/backImage.png");
+    const navigation = useNavigation();
 
     const onHandleLogin = () => {
         // Handle login logic (without Firebase)
@@ -44,11 +46,11 @@ export default function Login() {
                     onChangeText={(text) => setPassword(text)}
                 />
                 <TouchableOpacity style={tw`bg-orange-500 h-14 rounded-xl justify-center items-center mt-10`} onPress={onHandleLogin}>
-                    <Text style={tw`text-white font-bold text-lg`}>Log In</Text>
+                    <Text style={tw`text-white font-bold text-lg`}>Login</Text>
                 </TouchableOpacity>
                 <View style={tw`mt-5 flex-row items-center justify-center`}>
                     <Text style={tw`text-gray-600 font-semibold`}>Don't have an account? </Text>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate('register')}>
                         <Text style={tw`text-orange-500 font-semibold`}>Sign Up</Text>
                     </TouchableOpacity>
                 </View>
