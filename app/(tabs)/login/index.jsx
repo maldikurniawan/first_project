@@ -6,31 +6,76 @@ import {
     Image,
     SafeAreaView,
     TouchableOpacity,
-    StatusBar,
-    Alert,
     ScrollView,
     KeyboardAvoidingView,
     Platform,
+    ActivityIndicator,
 } from "react-native";
 import tw from "twrnc";
 import { useNavigation } from "expo-router";
 import { Ionicons } from '@expo/vector-icons';
+import { API_URL_login } from '@/constants';
+import axios from "axios";
+import Swal from 'sweetalert2';
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 export default function Index() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [loading, setLoading] = useState(false); // Add loading state
     const navigation = useNavigation();
-
-    const onHandleLogin = () => {
-        // Handle login logic
-        if (email !== "" && password !== "") {
-            console.log("Login success");
-            // Add your login logic here
-        } else {
-            Alert.alert("Login error", "Please enter valid email and password");
+    const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
         }
-    };
+    });
+
+    const formik = useFormik({
+        initialValues: {
+            username: "",
+            password: "",
+        },
+        validationSchema: Yup.object().shape({
+            username: Yup.string()
+                .required("Username is required"),
+            password: Yup.string()
+                .min(8, "Password must be at least 8 characters")
+                .required("Password is required"),
+        }),
+        onSubmit: async (values) => {
+            try {
+                const response = await axios.post(API_URL_login, {
+                    username: values.username,
+                    password: values.password,
+                });
+                console.log(response)
+
+                if (response.request.status === 200) {
+                    Toast.fire({
+                        icon: "success",
+                        title: "Signed in uccessfully"
+                    });
+                    navigation.navigate("home");
+                } else {
+                    Toast.fire({
+                        icon: "success",
+                        title: "Signed in failed"
+                    });
+                }
+            } catch (error) {
+                Toast.fire({
+                    icon: "success",
+                    title: "Signed in failed"
+                });
+            }
+        },
+    });
 
     return (
         <KeyboardAvoidingView
@@ -44,34 +89,51 @@ export default function Index() {
                     <SafeAreaView style={tw`flex-1 justify-center mx-8`}>
                         <Text style={tw`text-4xl font-bold text-orange-500 text-center mb-4`}>Login</Text>
 
-                        <View>
-                            <Text style={tw`text-gray-700 font-semibold mb-1`}>Email</Text>
+                        {/* Username Input */}
+                        <View style={tw`mb-4`}>
+                            <Text style={tw`text-gray-700 font-semibold mb-1`}>Username</Text>
                             <TextInput
-                                style={tw`bg-gray-200 text-lg rounded-xl p-2 mb-4`}
+                                style={tw`bg-gray-200 text-lg rounded-xl p-2 mb-1`}
                                 autoCapitalize="none"
-                                autoFocus={true}
-                                value={email}
-                                onChangeText={(text) => setEmail(text)}
+                                value={formik.values.username}
+                                onChangeText={formik.handleChange("username")}
+                                onBlur={formik.handleBlur("username")}
                             />
+                            {formik.touched.username && formik.errors.username && (
+                                <Text style={tw`text-red-500`}>{formik.errors.username}</Text>
+                            )}
                         </View>
 
+                        {/* Password Input */}
                         <View>
                             <Text style={tw`text-gray-700 font-semibold mb-1`}>Password</Text>
                             <TextInput
-                                style={tw`bg-gray-200 text-lg rounded-xl p-2 mb-4`}
+                                style={tw`bg-gray-200 text-lg rounded-xl p-2 mb-1`}
                                 autoCapitalize="none"
-                                autoCorrect={false}
-                                secureTextEntry={!isPasswordVisible} // Use state for visibility
-                                value={password}
-                                onChangeText={(text) => setPassword(text)}
+                                secureTextEntry={!isPasswordVisible}
+                                value={formik.values.password}
+                                onChangeText={formik.handleChange("password")}
+                                onBlur={formik.handleBlur("password")}
                             />
                             <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
                                 <Ionicons name={isPasswordVisible ? "eye-off" : "eye"} size={24} color="gray" style={tw`absolute right-3 -top-12`} />
                             </TouchableOpacity>
+                            {formik.touched.password && formik.errors.password && (
+                                <Text style={tw`text-red-500`}>{formik.errors.password}</Text>
+                            )}
                         </View>
 
-                        <TouchableOpacity style={tw`bg-orange-500 p-2 rounded-xl justify-center items-center mt-10`} onPress={onHandleLogin}>
-                            <Text style={tw`text-white font-bold text-lg`}>Login</Text>
+                        {/* Submit Button */}
+                        <TouchableOpacity
+                            style={tw`bg-orange-500 p-2 rounded-xl justify-center items-center mt-10`}
+                            onPress={formik.handleSubmit}
+                            disabled={loading} // Disable button while loading
+                        >
+                            {loading ? (
+                                <ActivityIndicator size="small" color="white" /> // Show loading indicator
+                            ) : (
+                                <Text style={tw`text-white font-bold text-lg`}>Login</Text>
+                            )}
                         </TouchableOpacity>
 
                         <View style={tw`mt-5 flex-row items-center justify-center`}>
@@ -81,9 +143,8 @@ export default function Index() {
                             </TouchableOpacity>
                         </View>
                     </SafeAreaView>
-                    <StatusBar barStyle="light-content" />
                 </View>
             </ScrollView>
-        </KeyboardAvoidingView >
+        </KeyboardAvoidingView>
     );
 }
