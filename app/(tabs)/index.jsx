@@ -1,32 +1,67 @@
-import { useNavigation } from 'expo-router';
-import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import React, { useEffect } from 'react';
+import { Image, StatusBar, useColorScheme, View } from 'react-native';
+import { scale } from 'react-native-size-matters';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CLDarkBase, CLLightBase } from '@/utils/colors';
+import { useNavigation } from '@react-navigation/native';
+import Animated from 'react-native-reanimated';
 import tw from 'twrnc';
 
 export default function Index() {
   const navigation = useNavigation();
+  const colorScheme = useColorScheme();
+
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        if (token) {
+          // Jika token ada, navigasi ke /home
+          navigation.navigate('home');
+        } else {
+          // Jika token tidak ada, navigasi ke /login
+          navigation.navigate('login');
+        }
+      } catch (error) {
+        console.error('Error fetching token', error);
+      }
+    };
+
+    checkToken();
+  }, [navigation]);
+
   return (
-    <View style={tw`flex-1 bg-gray-100 justify-center items-center p-6`}>
-      {/* Header Section */}
-      <View style={tw`mb-8`}>
-        <Text style={tw`text-4xl font-bold text-orange-800 text-center`}>Welcome to Our App!</Text>
-        <Text style={tw`text-lg text-orange-600 mt-2 text-center`}>Experience the best service we offer</Text>
-      </View>
+    <>
+      <StatusBar
+        barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'}
+        backgroundColor={colorScheme === 'light' ? CLLightBase : CLDarkBase}
+      />
+      <View style={tw`h-full overflow-hidden`}>
+        <Animated.View
+          style={[tw`absolute -top-[400px] -left-40 rounded-full`]}>
+          <Image
+            style={{ width: scale(300), height: scale(300) }}
+            source={require('@/assets/images/ellipse.png')}
+          />
+        </Animated.View>
+        <Animated.View
+          style={[tw`absolute -bottom-[400px] -right-28 rounded-full`]}>
+          <Image
+            style={{ width: scale(200), height: scale(200) }}
+            source={require('@/assets/images/ellipse.png')}
+          />
+        </Animated.View>
 
-      {/* Main Content */}
-      <View style={tw`mb-12`}>
-        <Text style={tw`text-xl text-gray-700 text-center`}>
-          Enjoy seamless functionality, real-time updates, and a fantastic user experience!
-        </Text>
+        {/* Content */}
+        <View style={tw`min-h-full z-20`}>
+          <View style={tw`flex flex-1 justify-center items-center`}>
+            <Image
+              style={tw`w-40 h-40`}
+              source={require('@/assets/images/react-logo.png')}
+            />
+          </View>
+        </View>
       </View>
-
-      {/* Call to Action Button */}
-      <TouchableOpacity 
-        style={tw`bg-orange-500 p-4 rounded-full shadow-lg`}
-        onPress={() => navigation.navigate('login')}
-      >
-        <Text style={tw`text-white text-lg font-semibold  mx-2`}>Get Started</Text>
-      </TouchableOpacity>
-    </View>
+    </>
   );
 }
