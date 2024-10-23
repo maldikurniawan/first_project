@@ -1,26 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     Text,
     View,
-    TextInput,
     Image,
     SafeAreaView,
     TouchableOpacity,
     StatusBar,
-    Alert,
     ScrollView,
     KeyboardAvoidingView,
     Platform,
+    Alert,
 } from "react-native";
 import tw from "twrnc";
 import { useNavigation } from "expo-router";
-import { Ionicons } from '@expo/vector-icons';
 import { API_URL_register } from '@/constants';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { InputField } from '@/components'; // Import the custom input component
 
 export default function Index() {
     const navigation = useNavigation();
+    const [isPasswordVisible, setPasswordVisible] = useState(false);
+    const [isRetypePasswordVisible, setRetypePasswordVisible] = useState(false);
+
     const formik = useFormik({
         initialValues: {
             username: '',
@@ -66,118 +68,82 @@ export default function Index() {
     });
 
     return (
-        <KeyboardAvoidingView
-            style={tw`flex-1`}
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-        >
-            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-                <View style={tw`flex-1 bg-white`}>
-                    <Image source={require('@/assets/images/backImage.png')} style={tw`absolute top-0 w-full h-80`} />
-                    <View style={tw`absolute bottom-0 w-full h-14/15 bg-white rounded-t-3xl`} />
-                    <SafeAreaView style={tw`flex-1 justify-center mx-8`}>
-                        <Text style={tw`text-4xl font-bold text-orange-500 text-center mb-4 mt-12`}>Register</Text>
+        <SafeAreaView style={tw`flex-1`}>
+            <KeyboardAvoidingView
+                style={tw`flex-1`}
+                behavior="height"
+            >
+                <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+                    <View style={tw`flex-1 bg-white`}>
+                        <Image source={require('@/assets/images/backImage.png')} style={tw`absolute top-0 w-full h-80`} />
+                        <View style={tw`absolute bottom-0 w-full h-14/15 bg-white rounded-t-3xl`} />
+                        <SafeAreaView style={tw`flex-1 justify-center mx-8`}>
+                            <Text style={tw`text-4xl font-bold text-orange-500 text-center mb-4 mt-16`}>Register</Text>
 
-                        <View style={tw`mb-4`}>
-                            <Text style={tw`text-gray-700 font-semibold mb-1`}>Username</Text>
-                            <TextInput
-                                style={tw`bg-gray-200 text-lg rounded-xl p-2 mb-1`}
-                                autoCapitalize="none"
+                            <InputField
+                                label="Username"
                                 value={formik.values.username}
                                 onChangeText={formik.handleChange('username')}
                                 onBlur={formik.handleBlur('username')}
+                                error={formik.touched.username && formik.errors.username}
                             />
-                            {formik.touched.username && formik.errors.username && (
-                                <Text style={tw`text-red-500`}>{formik.errors.username}</Text>
-                            )}
-                        </View>
 
-                        <View style={tw`mb-4`}>
-                            <Text style={tw`text-gray-700 font-semibold mb-1`}>Firstname</Text>
-                            <TextInput
-                                style={tw`bg-gray-200 text-lg rounded-xl p-2 mb-1`}
-                                autoCapitalize="words"
+                            <InputField
+                                label="Firstname"
                                 value={formik.values.first_name}
                                 onChangeText={formik.handleChange('first_name')}
                                 onBlur={formik.handleBlur('first_name')}
+                                error={formik.touched.first_name && formik.errors.first_name}
                             />
-                            {formik.touched.first_name && formik.errors.first_name && (
-                                <Text style={tw`text-red-500`}>{formik.errors.first_name}</Text>
-                            )}
-                        </View>
 
-                        <View style={tw`mb-4`}>
-                            <Text style={tw`text-gray-700 font-semibold mb-1`}>Lastname</Text>
-                            <TextInput
-                                style={tw`bg-gray-200 text-lg rounded-xl p-2 mb-1`}
-                                autoCapitalize="words"
+                            <InputField
+                                label="Lastname"
                                 value={formik.values.last_name}
                                 onChangeText={formik.handleChange('last_name')}
                                 onBlur={formik.handleBlur('last_name')}
+                                error={formik.touched.last_name && formik.errors.last_name}
                             />
-                            {formik.touched.last_name && formik.errors.last_name && (
-                                <Text style={tw`text-red-500`}>{formik.errors.last_name}</Text>
-                            )}
-                        </View>
 
-                        <View style={tw`mb-4`}>
-                            <Text style={tw`text-gray-700 font-semibold mb-1`}>Password</Text>
-                            <View style={tw`flex-row items-center`}>
-                                <TextInput
-                                    style={tw`bg-gray-200 text-lg rounded-xl p-2 flex-1`}
-                                    autoCapitalize="none"
-                                    autoCorrect={false}
-                                    secureTextEntry={!formik.values.isPasswordVisible}
-                                    value={formik.values.password}
-                                    onChangeText={formik.handleChange('password')}
-                                    onBlur={formik.handleBlur('password')}
-                                />
-                                <TouchableOpacity onPress={() => formik.setFieldValue('isPasswordVisible', !formik.values.isPasswordVisible)}>
-                                    <Ionicons name={formik.values.isPasswordVisible ? "eye-off" : "eye"} size={24} color="gray" style={tw`absolute right-3 -top-3`} />
-                                </TouchableOpacity>
-                            </View>
-                            {formik.touched.password && formik.errors.password && (
-                                <Text style={tw`text-red-500`}>{formik.errors.password}</Text>
-                            )}
-                        </View>
+                            <InputField
+                                label="Password"
+                                value={formik.values.password}
+                                onChangeText={formik.handleChange('password')}
+                                onBlur={formik.handleBlur('password')}
+                                secureTextEntry={true}
+                                isVisible={isPasswordVisible}
+                                setVisible={() => setPasswordVisible(!isPasswordVisible)}
+                                error={formik.touched.password && formik.errors.password}
+                            />
 
-                        <View>
-                            <Text style={tw`text-gray-700 font-semibold mb-1 mt-4`}>Retype Password</Text>
-                            <View style={tw`flex-row items-center`}>
-                                <TextInput
-                                    style={tw`bg-gray-200 text-lg rounded-xl p-2 flex-1`}
-                                    autoCapitalize="none"
-                                    autoCorrect={false}
-                                    secureTextEntry={!formik.values.isRetypePasswordVisible}
-                                    value={formik.values.retypePassword}
-                                    onChangeText={formik.handleChange('retypePassword')}
-                                    onBlur={formik.handleBlur('retypePassword')}
-                                />
-                                <TouchableOpacity onPress={() => formik.setFieldValue('isRetypePasswordVisible', !formik.values.isRetypePasswordVisible)}>
-                                    <Ionicons name={formik.values.isRetypePasswordVisible ? "eye-off" : "eye"} size={24} color="gray" style={tw`absolute right-3 -top-3`} />
-                                </TouchableOpacity>
-                            </View>
-                            {formik.touched.retypePassword && formik.errors.retypePassword && (
-                                <Text style={tw`text-red-500`}>{formik.errors.retypePassword}</Text>
-                            )}
-                        </View>
+                            <InputField
+                                label="Retype Password"
+                                value={formik.values.retypePassword}
+                                onChangeText={formik.handleChange('retypePassword')}
+                                onBlur={formik.handleBlur('retypePassword')}
+                                secureTextEntry={true}
+                                isVisible={isRetypePasswordVisible}
+                                setVisible={() => setRetypePasswordVisible(!isRetypePasswordVisible)}
+                                error={formik.touched.retypePassword && formik.errors.retypePassword}
+                            />
 
-                        <TouchableOpacity
-                            style={tw`bg-orange-500 p-2 rounded-xl justify-center items-center mt-10`}
-                            onPress={formik.handleSubmit} // Submit form with Formik
-                        >
-                            <Text style={tw`text-white font-bold text-lg`}>Register</Text>
-                        </TouchableOpacity>
-
-                        <View style={tw`mt-5 flex-row items-center justify-center mb-8`}>
-                            <Text style={tw`text-gray-600 font-semibold`}>Already have an account? </Text>
-                            <TouchableOpacity onPress={() => navigation.navigate('login')}>
-                                <Text style={tw`text-orange-500 font-semibold`}>Login</Text>
+                            <TouchableOpacity
+                                style={tw`bg-orange-500 p-2 rounded-xl justify-center items-center mt-6`}
+                                onPress={formik.handleSubmit} // Submit form with Formik
+                            >
+                                <Text style={tw`text-white font-bold text-lg`}>Register</Text>
                             </TouchableOpacity>
-                        </View>
-                    </SafeAreaView>
-                    <StatusBar barStyle="light-content" />
-                </View>
-            </ScrollView>
-        </KeyboardAvoidingView>
+
+                            <View style={tw`mt-5 flex-row items-center justify-center mb-10`}>
+                                <Text style={tw`text-gray-600 font-semibold`}>Already have an account? </Text>
+                                <TouchableOpacity onPress={() => navigation.navigate('login')}>
+                                    <Text style={tw`text-orange-500 font-semibold`}>Login</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </SafeAreaView>
+                        <StatusBar barStyle="light-content" />
+                    </View>
+                </ScrollView>
+            </KeyboardAvoidingView>
+        </SafeAreaView>
     );
 }
