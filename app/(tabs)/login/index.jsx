@@ -18,6 +18,7 @@ import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { InputField } from '@/components';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Index() {
     const navigation = useNavigation();
@@ -45,6 +46,11 @@ export default function Index() {
                 });
 
                 if (response.status === 200) {
+                    const { user, tokens } = response.data;
+
+                    // Store access and refresh tokens in AsyncStorage
+                    await AsyncStorage.setItem('user', JSON.stringify(user));
+                    await AsyncStorage.setItem('tokens', JSON.stringify(tokens));
                     Alert.alert("Success", "Signed in successfully");
                     navigation.navigate("home");
                 } else {
@@ -70,7 +76,15 @@ export default function Index() {
                         <Image source={require('@/assets/images/backImage.png')} style={tw`absolute top-0 w-full h-80`} />
                         <View style={tw`absolute bottom-0 w-full h-7/8 bg-white rounded-t-3xl`} />
                         <SafeAreaView style={tw`flex-1 justify-center mx-8`}>
-                            <Text style={tw`text-4xl font-bold text-orange-500 text-center mb-4`}>Login</Text>
+                            <Text
+                                style={[tw`text-4xl font-bold text-orange-500 text-center mb-4 mt-10`, {
+                                    textShadowColor: 'black',
+                                    textShadowOffset: { width: -1, height: 1 },
+                                    textShadowRadius: 1,
+                                }]}
+                            >
+                                Login
+                            </Text>
 
                             {/* Username Input */}
                             <InputField
@@ -102,7 +116,7 @@ export default function Index() {
                                 disabled={loading}
                             >
                                 {loading ? (
-                                    <ActivityIndicator size="small" color="white" />
+                                    <ActivityIndicator size="large" color="white" />
                                 ) : (
                                     <Text style={tw`text-white font-bold text-lg`}>Login</Text>
                                 )}

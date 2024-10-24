@@ -14,7 +14,7 @@ export default function Index() {
   useEffect(() => {
     const checkToken = async () => {
       try {
-        const token = await AsyncStorage.getItem('token');
+        const token = JSON.parse(await AsyncStorage.getItem('tokens'));
         if (token) {
           // Jika token ada, navigasi ke /home
           navigation.navigate('home');

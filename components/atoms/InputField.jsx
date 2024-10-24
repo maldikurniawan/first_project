@@ -16,7 +16,7 @@ const CustomInput = ({
     ...rest
 }) => {
     return (
-        <View style={tw`mb-4`}>
+        <View style={tw`mb-8`}>
             <Text style={tw`text-gray-700 font-semibold mb-1`}>{label}</Text>
             <View style={tw`flex-row items-center`}>
                 <TextInput
@@ -38,7 +38,7 @@ const CustomInput = ({
                     </TouchableOpacity>
                 )}
             </View>
-            {error && <Text style={tw`text-red-500`}>{error}</Text>}
+            {error && <Text style={tw`text-red-500 absolute top-[68px]`}>{error}</Text>}
         </View>
     );
 };

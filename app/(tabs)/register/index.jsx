@@ -16,6 +16,7 @@ import { useNavigation } from "expo-router";
 import { API_URL_register } from '@/constants';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import axios from 'axios';  // Import axios
 import { InputField } from '@/components'; // Import the custom input component
 
 export default function Index() {
@@ -40,28 +41,17 @@ export default function Index() {
         }),
         onSubmit: async (values) => {
             try {
-                const response = await fetch(API_URL_register, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        username: values.username,
-                        first_name: values.first_name,
-                        last_name: values.last_name,
-                        password: values.password,
-                    }),
+                const response = await axios.post(API_URL_register, {
+                    username: values.username,
+                    first_name: values.first_name,
+                    last_name: values.last_name,
+                    password: values.password,
                 });
 
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                const data = await response.json();
-                console.log("Register success", data);
+                console.log("Register success", response.data);
                 navigation.navigate("home");
-
             } catch (error) {
+                console.error("Register error", error);
                 Alert.alert("Register error", "There was an error during registration.");
             }
         },
@@ -78,7 +68,15 @@ export default function Index() {
                         <Image source={require('@/assets/images/backImage.png')} style={tw`absolute top-0 w-full h-80`} />
                         <View style={tw`absolute bottom-0 w-full h-14/15 bg-white rounded-t-3xl`} />
                         <SafeAreaView style={tw`flex-1 justify-center mx-8`}>
-                            <Text style={tw`text-4xl font-bold text-orange-500 text-center mb-4 mt-16`}>Register</Text>
+                            <Text
+                                style={[tw`text-4xl font-bold text-orange-500 text-center mb-4 mt-20`, {
+                                    textShadowColor: 'black',
+                                    textShadowOffset: { width: -1, height: 1 },
+                                    textShadowRadius: 1,
+                                }]}
+                            >
+                                Register
+                            </Text>
 
                             <InputField
                                 label="Username"
